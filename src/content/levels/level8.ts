@@ -75,10 +75,10 @@ export const level8: Level = {
           newGraphemes: [],
           reviewGraphemes: ["j", "u", "m", "p", "e", "d", "l", "a", "y", "n", "t", "w", "r", "c"],
           newHeartWords: ["many"],
-          targetWords: ["jumped", "played", "landed", "wanted", "looked", "called", "rained", "napped"],
+          targetWords: ["jumped", "played", "landed", "rained", "napped", "hopped", "packed", "kicked"],
           rewardCreatureId: "glyphmun",
           activities: [
-            { type: "wordTap", words: ["jumped", "played", "landed", "wanted", "looked", "rained"] },
+            { type: "wordTap", words: ["jumped", "played", "landed", "rained", "napped", "hopped"] },
             { type: "wordBuild", word: "jumped", emoji: "🤸" },
             { type: "sightFlash", words: ["many"] },
             { type: "storyRead", storyId: "story-rabbit" },

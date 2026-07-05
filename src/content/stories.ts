@@ -125,7 +125,7 @@ export const STORIES: Story[] = [
       { text: "It is night. I see the moon.", emoji: "🌙" },
       { text: "The moon is high and bright.", emoji: "⭐" },
       { text: "I would like to sleep soon.", emoji: "😴" },
-      { text: "Good night, moon!", emoji: "🌛" },
+      { text: "Night night, moon!", emoji: "🌛" },
     ],
   },
   {
@@ -134,7 +134,7 @@ export const STORIES: Story[] = [
     pages: [
       { text: "We park the car by the sea.", emoji: "🚗" },
       { text: "A bird sings in a tree.", emoji: "🐦" },
-      { text: "The water is cold over here.", emoji: "🌊" },
+      { text: "The water is right over here.", emoji: "🌊" },
       { text: "We had corn for lunch. Yum!", emoji: "🌽" },
     ],
   },

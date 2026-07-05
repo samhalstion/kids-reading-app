@@ -2,18 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Literacy fonts if installed on the device; otherwise fall back gracefully.
-   Real bundled font files can be added under public/fonts in the polish phase. */
-@font-face {
-  font-family: "Andika";
-  src: local("Andika"), local("Andika New Basic");
-  font-display: swap;
-}
-@font-face {
-  font-family: "OpenDyslexic";
-  src: local("OpenDyslexic"), local("OpenDyslexic3");
-  font-display: swap;
-}
+/* Andika + OpenDyslexic are provided as bundled @fontsource packages (imported
+   in main.tsx), so the reader and dyslexia-friendly fonts are real and work
+   offline — not silent local() fallbacks. */
 
 html,
 body,

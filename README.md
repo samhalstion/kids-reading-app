@@ -1,12 +1,14 @@
 # 🦖 Monster Reader
 
-A fun, tablet-first reading app that teaches a kindergarten→1st-grade child to
-read using **systematic synthetic phonics** — the evidence-based path to a
-2nd-grade reading level. Themed around original "pocketling" monsters and real
-dinosaurs to keep young readers motivated.
+A fun, tablet-first reading app that helps a kindergarten→1st-grade child learn to
+read using **systematic synthetic phonics** — the instructional approach research
+associates with strong early-reading outcomes. Themed around original "pocketling"
+monsters and real dinosaurs to keep young readers motivated.
 
-Built for a specific goal: **reach a 2nd-grade reading level in 2–3 months** with
-one short (~10–15 min) lesson a day.
+Designed for short (~10–15 min) daily sessions that build decoding skill step by
+step. (Note: this is an in-progress learning tool, not a clinically validated
+program — it makes no guaranteed outcome or timeframe claim. See the
+launch-readiness review for current limitations.)
 
 ## How it teaches reading
 

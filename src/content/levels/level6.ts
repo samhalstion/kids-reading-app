@@ -59,7 +59,7 @@ export const level6: Level = {
           newGraphemes: ["ee", "ea"],
           reviewGraphemes: ["ai", "ay", "b", "s", "t", "r", "f", "l", "d", "n"],
           newHeartWords: ["why"],
-          targetWords: ["bee", "see", "tree", "feet", "sea", "seal", "leaf", "read"],
+          targetWords: ["bee", "see", "tree", "feet", "sea", "seal", "leaf", "seat"],
           rewardCreatureId: "finneo",
           activities: [
             { type: "soundTap", graphemeId: "ee" },

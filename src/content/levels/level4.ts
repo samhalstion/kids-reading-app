@@ -170,7 +170,7 @@ export const level4: Level = {
               type: "pictureSound",
               graphemeId: "wh",
               choices: [
-                { word: "whip", emoji: "🎿", correct: true },
+                { word: "whale", emoji: "🐋", correct: true },
                 { word: "ring", emoji: "💍", correct: false },
                 { word: "fish", emoji: "🐟", correct: false },
               ],
