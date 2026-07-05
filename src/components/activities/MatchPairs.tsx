@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import type { MatchPairsActivity } from "../../content/types";
 import { speakWord } from "../../lib/speech";
@@ -11,6 +11,8 @@ export function MatchPairs({ activity, onComplete }: ActivityProps<MatchPairsAct
   const pics = useMemo(() => [...activity.pairs].sort(() => Math.random() - 0.5), [activity]);
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [matched, setMatched] = useState<Set<string>>(new Set());
+  // Words the child mismatched at least once (not first-try correct).
+  const struggled = useRef<Set<string>>(new Set());
 
   function tapWord(word: string) {
     if (matched.has(word)) return;
@@ -26,9 +28,22 @@ export function MatchPairs({ activity, onComplete }: ActivityProps<MatchPairsAct
       setMatched(next);
       setSelectedWord(null);
       sfx.correct();
-      if (next.size === activity.pairs.length) setTimeout(onComplete, 800);
+      if (next.size === activity.pairs.length) {
+        const missed = [...struggled.current];
+        setTimeout(
+          () =>
+            onComplete({
+              graded: true,
+              items: activity.pairs.length,
+              firstTryCorrect: activity.pairs.length - missed.length,
+              misses: missed,
+            }),
+          800,
+        );
+      }
     } else {
       sfx.gentle();
+      struggled.current.add(selectedWord);
       setSelectedWord(null);
     }
   }

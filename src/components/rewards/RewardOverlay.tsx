@@ -74,6 +74,17 @@ export function RewardOverlay({ rewards, onDone }: Props) {
       animate={{ opacity: 1 }}
       className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-purple-500/95 to-indigo-700/95 p-6 text-center text-white"
     >
+      {i === 0 && (
+        <div className="mb-3 flex flex-col items-center gap-1">
+          <div className="text-5xl" aria-label={`${rewards.stars} out of 3 stars`}>
+            {"⭐".repeat(rewards.stars)}
+            <span className="opacity-30">{"☆".repeat(3 - rewards.stars)}</span>
+          </div>
+          <p className="font-reader text-lg font-bold drop-shadow">
+            {rewards.mastered ? "You mastered it! 🎉" : "Nice work — keep practicing!"}
+          </p>
+        </div>
+      )}
       <motion.h2
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

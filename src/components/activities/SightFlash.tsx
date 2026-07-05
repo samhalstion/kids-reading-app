@@ -5,7 +5,7 @@ import { speakWord } from "../../lib/speech";
 import { sfx } from "../../lib/audio";
 import { BigButton } from "../ui/BigButton";
 import { ActivityFrame } from "./common";
-import type { ActivityProps } from "./types";
+import { EXPLORATORY, type ActivityProps } from "./types";
 
 /**
  * Heart-word flash cards. These words have irregular parts and are taught by
@@ -18,7 +18,7 @@ export function SightFlash({ activity, onComplete }: ActivityProps<SightFlashAct
 
   function next() {
     if (last) {
-      onComplete();
+      onComplete(EXPLORATORY);
     } else {
       sfx.tap();
       setI((n) => n + 1);

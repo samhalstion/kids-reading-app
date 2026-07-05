@@ -16,6 +16,7 @@ export function WordBuild({ activity, onComplete }: ActivityProps<WordBuildActiv
   );
   const [placed, setPlaced] = useState<number[]>([]); // ids in the answer row
   const [done, setDone] = useState(false);
+  const [wrongTaps, setWrongTaps] = useState(0);
 
   const usedIds = new Set(placed);
   const nextSlot = placed.length;
@@ -24,7 +25,8 @@ export function WordBuild({ activity, onComplete }: ActivityProps<WordBuildActiv
     if (done || usedIds.has(id)) return;
     if (g !== answer[nextSlot]) {
       sfx.gentle();
-      return; // gentle: wrong tile just won't place
+      setWrongTaps((n) => n + 1); // wrong tile: counts against first-try mastery
+      return;
     }
     speakPhoneme(g);
     const next = [...placed, id];
@@ -32,8 +34,18 @@ export function WordBuild({ activity, onComplete }: ActivityProps<WordBuildActiv
     if (next.length === answer.length) {
       setDone(true);
       sfx.correct();
+      const firstTry = wrongTaps === 0;
       setTimeout(() => speakWord(activity.word), 200);
-      setTimeout(onComplete, 1300);
+      setTimeout(
+        () =>
+          onComplete({
+            graded: true,
+            items: 1,
+            firstTryCorrect: firstTry ? 1 : 0,
+            misses: firstTry ? [] : [activity.word],
+          }),
+        1300,
+      );
     }
   }
 

@@ -5,7 +5,7 @@ import { speakWord } from "../../lib/speech";
 import { sfx } from "../../lib/audio";
 import { BigButton } from "../ui/BigButton";
 import { ActivityFrame } from "./common";
-import type { ActivityProps } from "./types";
+import { EXPLORATORY, type ActivityProps } from "./types";
 
 /** Independent decoding practice — tap any word to hear it. Explore, then done. */
 export function WordTap({ activity, onComplete }: ActivityProps<WordTapActivity>) {
@@ -32,7 +32,7 @@ export function WordTap({ activity, onComplete }: ActivityProps<WordTapActivity>
           </motion.button>
         ))}
       </div>
-      <BigButton onClick={onComplete} disabled={!allTapped}>
+      <BigButton onClick={() => onComplete(EXPLORATORY)} disabled={!allTapped}>
         {allTapped ? "All done! ➡️" : "Tap them all 👆"}
       </BigButton>
     </ActivityFrame>

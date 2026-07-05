@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LEVELS } from "../content/levels";
 import { TOTAL_LESSONS } from "../lib/curriculum";
+import { PHONEME_BY_ID } from "../content/phonemes";
 import { useProgress } from "../store/progress";
 import { BigButton } from "../components/ui/BigButton";
 import { GrownUpGate } from "../components/ui/GrownUpGate";
@@ -20,8 +21,20 @@ export function ParentScreen() {
   const perLevel = LEVELS.map((lvl) => {
     const lessons = lvl.units.flatMap((u) => u.lessons);
     const done = lessons.filter((l) => s.completedLessons.includes(l.id)).length;
-    return { title: lvl.title, emoji: lvl.emoji, done, total: lessons.length };
+    const mastered = lessons.filter((l) => s.lessonScores[l.id]?.mastered).length;
+    return { title: lvl.title, emoji: lvl.emoji, done, mastered, total: lessons.length };
   });
+
+  const masteredTotal = Object.values(s.lessonScores).filter((sc) => sc.mastered).length;
+
+  // Top skills the child has missed most — the "practice these" list.
+  const weakSkills = Object.entries(s.missedGraphemes)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8)
+    .map(([id, count]) => {
+      const p = PHONEME_BY_ID[id];
+      return { label: p ? `${p.grapheme} (as in ${p.example})` : id, count };
+    });
 
   return (
     <div className="min-h-screen p-6">
@@ -35,8 +48,12 @@ export function ParentScreen() {
       {/* Progress dashboard */}
       <section className="mb-8 rounded-2xl bg-white p-5 shadow">
         <h2 className="mb-3 text-2xl font-bold text-brand-dark">Progress</h2>
-        <p className="mb-4 text-lg text-gray-600">
-          {s.completedLessons.length} / {TOTAL_LESSONS} lessons · ⭐ {s.xp} stars · 🔥 {s.streakDays}-day
+        <p className="mb-1 text-lg text-gray-600">
+          <strong>{masteredTotal}</strong> of {TOTAL_LESSONS} lessons mastered
+          {" "}({s.completedLessons.length} played)
+        </p>
+        <p className="mb-4 text-sm text-gray-500">
+          "Mastered" = answered 80%+ of items correctly on the first try. 🔥 {s.streakDays}-day
           streak · 🐾 {s.unlockedCreatures.length} monsters
         </p>
         <div className="flex flex-col gap-2">
@@ -46,18 +63,45 @@ export function ParentScreen() {
                 {l.emoji} {l.title}
               </span>
               <div className="h-4 flex-1 overflow-hidden rounded-full bg-gray-200">
-                <div
-                  className="h-full bg-brand"
-                  style={{ width: `${(l.done / l.total) * 100}%` }}
-                />
+                {/* played (light) vs mastered (solid) */}
+                <div className="relative h-full">
+                  <div
+                    className="absolute h-full bg-brand-light"
+                    style={{ width: `${(l.done / l.total) * 100}%` }}
+                  />
+                  <div
+                    className="absolute h-full bg-brand"
+                    style={{ width: `${(l.mastered / l.total) * 100}%` }}
+                  />
+                </div>
               </div>
-              <span className="w-14 text-right text-gray-600">
-                {l.done}/{l.total}
+              <span className="w-20 text-right text-sm text-gray-600">
+                {l.mastered}/{l.total} ★
               </span>
             </div>
           ))}
         </div>
       </section>
+
+      {/* Skills to practice */}
+      {weakSkills.length > 0 && (
+        <section className="mb-8 rounded-2xl bg-white p-5 shadow">
+          <h2 className="mb-1 text-2xl font-bold text-brand-dark">Skills to practice</h2>
+          <p className="mb-3 text-sm text-gray-500">
+            Sounds &amp; words {`he/she`} has missed most — worth a little extra review.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {weakSkills.map((w) => (
+              <span
+                key={w.label}
+                className="rounded-full bg-amber-100 px-3 py-1 text-lg font-bold text-amber-800"
+              >
+                {w.label} · missed {w.count}×
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Settings */}
       <section className="mb-8 rounded-2xl bg-white p-5 shadow">

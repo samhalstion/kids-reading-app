@@ -32,6 +32,32 @@ function makeSafeStorage(): Storage {
 
 const XP_PER_LESSON = 20;
 
+/** First-try accuracy at or above this = the lesson is "mastered". */
+export const MASTERY_THRESHOLD = 0.8;
+
+function starsFor(accuracy: number): 1 | 2 | 3 {
+  if (accuracy >= 0.9) return 3;
+  if (accuracy >= MASTERY_THRESHOLD) return 2;
+  return 1;
+}
+
+/** Aggregated first-try performance a finished lesson reports up from its activities. */
+export interface LessonResult {
+  /** Graded items across the lesson. */
+  items: number;
+  /** Items correct on the first attempt. */
+  firstTryCorrect: number;
+  /** grapheme ids / words missed (for the weak-skills report + review). */
+  misses: string[];
+}
+
+/** Best recorded performance for a lesson. */
+export interface LessonScore {
+  accuracy: number;
+  stars: 1 | 2 | 3;
+  mastered: boolean;
+}
+
 export interface Settings {
   muted: boolean;
   /** TTS rate; slow default so early readers can follow. */
@@ -47,6 +73,12 @@ export interface LessonRewards {
   newBadges: string[];
   xpGained: number;
   alreadyDone: boolean;
+  /** First-try accuracy for THIS run (0..1). */
+  accuracy: number;
+  /** 1–3 stars earned this run. */
+  stars: 1 | 2 | 3;
+  /** Whether this run met the mastery threshold. */
+  mastered: boolean;
 }
 
 interface ProgressState {
@@ -57,9 +89,13 @@ interface ProgressState {
   badges: string[];
   streakDays: number;
   lastPlayedDate: string | null;
+  /** Best score per lesson (accuracy/stars/mastery). */
+  lessonScores: Record<string, LessonScore>;
+  /** How many times each grapheme has been missed — the weak-skills heat map. */
+  missedGraphemes: Record<string, number>;
   settings: Settings;
 
-  completeLesson: (lessonId: string) => LessonRewards;
+  completeLesson: (lessonId: string, result: LessonResult) => LessonRewards;
   toggleMute: () => void;
   setRate: (rate: number) => void;
   toggleDyslexicFont: () => void;
@@ -92,13 +128,23 @@ export const useProgress = create<ProgressState>()(
       badges: [],
       streakDays: 0,
       lastPlayedDate: null,
+      lessonScores: {},
+      missedGraphemes: {},
       settings: { muted: false, ttsRate: 0.85, dyslexicFont: false },
 
-      completeLesson: (lessonId) => {
+      completeLesson: (lessonId, result) => {
         const state = get();
         const ref = LESSON_REF_BY_ID[lessonId];
         if (!ref) {
-          return { creatureId: "", newBadges: [], xpGained: 0, alreadyDone: true };
+          return {
+            creatureId: "",
+            newBadges: [],
+            xpGained: 0,
+            alreadyDone: true,
+            accuracy: 0,
+            stars: 1,
+            mastered: false,
+          };
         }
         const alreadyDone = state.completedLessons.includes(lessonId);
         const { lesson, unit, level } = ref;
@@ -151,6 +197,30 @@ export const useProgress = create<ProgressState>()(
 
         const xpGained = alreadyDone ? 0 : XP_PER_LESSON;
 
+        // Score this run on first-try accuracy (an all-exploratory lesson with no
+        // graded items counts as mastered — there was nothing to get wrong).
+        const accuracy = result.items > 0 ? result.firstTryCorrect / result.items : 1;
+        const stars = starsFor(accuracy);
+        const mastered = accuracy >= MASTERY_THRESHOLD;
+
+        // Keep the BEST score across replays.
+        const prev = state.lessonScores[lessonId];
+        const bestAccuracy = prev ? Math.max(prev.accuracy, accuracy) : accuracy;
+        const lessonScores = {
+          ...state.lessonScores,
+          [lessonId]: {
+            accuracy: bestAccuracy,
+            stars: starsFor(bestAccuracy),
+            mastered: bestAccuracy >= MASTERY_THRESHOLD,
+          },
+        };
+
+        // Tally missed graphemes/words for the weak-skills report.
+        const missedGraphemes = { ...state.missedGraphemes };
+        for (const m of result.misses) {
+          missedGraphemes[m] = (missedGraphemes[m] ?? 0) + 1;
+        }
+
         set({
           completedLessons: completed,
           unlockedCreatures: [...unlockedCreatures],
@@ -159,9 +229,21 @@ export const useProgress = create<ProgressState>()(
           xp: state.xp + xpGained,
           streakDays,
           lastPlayedDate: today,
+          lessonScores,
+          missedGraphemes,
         });
 
-        return { creatureId: lesson.rewardCreatureId, dinoId, bossId, newBadges, xpGained, alreadyDone };
+        return {
+          creatureId: lesson.rewardCreatureId,
+          dinoId,
+          bossId,
+          newBadges,
+          xpGained,
+          alreadyDone,
+          accuracy,
+          stars,
+          mastered,
+        };
       },
 
       toggleMute: () => set((s) => ({ settings: { ...s.settings, muted: !s.settings.muted } })),
@@ -177,6 +259,8 @@ export const useProgress = create<ProgressState>()(
           badges: [],
           streakDays: 0,
           lastPlayedDate: null,
+          lessonScores: {},
+          missedGraphemes: {},
         }),
     }),
     {

@@ -1,4 +1,5 @@
 import type { Activity } from "../content/types";
+import type { ActivityResult } from "./activities/types";
 import { SoundTap } from "./activities/SoundTap";
 import { PictureSound } from "./activities/PictureSound";
 import { Blend } from "./activities/Blend";
@@ -12,7 +13,7 @@ import { MatchPairs } from "./activities/MatchPairs";
 
 interface Props {
   activity: Activity;
-  onComplete: () => void;
+  onComplete: (result: ActivityResult) => void;
 }
 
 /** The lesson engine: maps an activity's `type` to its component. */

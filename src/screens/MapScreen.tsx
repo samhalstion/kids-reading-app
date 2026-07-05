@@ -11,6 +11,7 @@ export function MapScreen() {
   const navigate = useNavigate();
   const completed = new Set(useProgress((s) => s.completedLessons));
   const unlockedCreatures = useProgress((s) => s.unlockedCreatures);
+  const lessonScores = useProgress((s) => s.lessonScores);
 
   return (
     <div className="min-h-screen p-4 pb-24">
@@ -47,6 +48,7 @@ export function MapScreen() {
                   unit.lessons.map((lesson) => {
                     const ref = LESSON_REF_BY_ID[lesson.id];
                     const isDone = completed.has(lesson.id);
+                    const isMastered = lessonScores[lesson.id]?.mastered ?? false;
                     const unlocked = isLessonUnlocked(ref.index, completed);
                     const creature = CREATURE_BY_ID[lesson.rewardCreatureId];
                     return (
@@ -69,7 +71,9 @@ export function MapScreen() {
                         <span className={`text-4xl ${unlocked ? "" : "opacity-40 grayscale"}`}>
                           {unlocked ? creature?.emoji : "🔒"}
                         </span>
-                        {isDone && <span className="text-lg">⭐</span>}
+                        {isDone && (
+                          <span className="text-lg">{isMastered ? "⭐" : "✓"}</span>
+                        )}
                       </button>
                     );
                   }),

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import type { ComprehendMCActivity } from "../../content/types";
 import { speak } from "../../lib/speech";
@@ -11,6 +11,7 @@ export function ComprehendMC({ activity, onComplete }: ActivityProps<ComprehendM
   const [qi, setQi] = useState(0);
   const [wrong, setWrong] = useState<Set<number>>(new Set());
   const [answered, setAnswered] = useState(false);
+  const firstTryCorrect = useRef(0);
   const q = activity.questions[qi];
   const lastQ = qi === activity.questions.length - 1;
 
@@ -21,9 +22,15 @@ export function ComprehendMC({ activity, onComplete }: ActivityProps<ComprehendM
     if (c.correct) {
       sfx.correct();
       setAnswered(true);
+      if (wrong.size === 0) firstTryCorrect.current += 1;
       setTimeout(() => {
         if (lastQ) {
-          onComplete();
+          onComplete({
+            graded: true,
+            items: activity.questions.length,
+            firstTryCorrect: firstTryCorrect.current,
+            misses: [],
+          });
         } else {
           setQi((n) => n + 1);
           setWrong(new Set());

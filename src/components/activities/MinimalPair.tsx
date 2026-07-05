@@ -24,7 +24,17 @@ export function MinimalPair({ activity, onComplete }: ActivityProps<MinimalPairA
     if (i === targetIdx) {
       sfx.correct();
       setDone(true);
-      setTimeout(onComplete, 900);
+      const firstTry = wrong.size === 0;
+      setTimeout(
+        () =>
+          onComplete({
+            graded: true,
+            items: 1,
+            firstTryCorrect: firstTry ? 1 : 0,
+            misses: firstTry ? [] : [target],
+          }),
+        900,
+      );
     } else {
       sfx.gentle();
       setWrong((w) => new Set(w).add(i));

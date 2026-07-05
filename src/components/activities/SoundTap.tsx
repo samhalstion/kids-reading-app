@@ -5,7 +5,7 @@ import { speakPhoneme, speakPhonemeWithExample } from "../../lib/speech";
 import { sfx } from "../../lib/audio";
 import { BigButton } from "../ui/BigButton";
 import { ActivityFrame } from "./common";
-import type { ActivityProps } from "./types";
+import { EXPLORATORY, type ActivityProps } from "./types";
 
 /** "I do" — model a new letter-sound. Tap the letter to hear its sound. */
 export function SoundTap({ activity, onComplete }: ActivityProps<SoundTapActivity>) {
@@ -35,7 +35,7 @@ export function SoundTap({ activity, onComplete }: ActivityProps<SoundTapActivit
           <span className="font-reader font-bold text-brand-dark">{p.example}</span>
         </button>
 
-        <BigButton onClick={onComplete}>I said it! ✅</BigButton>
+        <BigButton onClick={() => onComplete(EXPLORATORY)}>I said it! ✅</BigButton>
       </div>
     </ActivityFrame>
   );

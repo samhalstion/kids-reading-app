@@ -6,7 +6,7 @@ import { speak, speakWord } from "../../lib/speech";
 import { sfx } from "../../lib/audio";
 import { BigButton } from "../ui/BigButton";
 import { ActivityFrame } from "./common";
-import type { ActivityProps } from "./types";
+import { EXPLORATORY, type ActivityProps } from "./types";
 
 /** A tappable decodable sentence with word-by-word highlight when read aloud. */
 function Sentence({ text }: { text: string }) {
@@ -91,7 +91,7 @@ export function StoryRead({
           onClick={() => {
             if (last) {
               sfx.correct();
-              onComplete();
+              onComplete(EXPLORATORY);
             } else {
               sfx.tap();
               setPage((n) => n + 1);
