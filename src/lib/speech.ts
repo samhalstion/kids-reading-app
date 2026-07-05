@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { PHONEME_BY_ID } from "../content/phonemes";
+import { getPhonemeAudioUrl } from "./phonemeAudio";
 import { useProgress } from "../store/progress";
 
 // ---------------------------------------------------------------------------
@@ -98,9 +99,25 @@ export function speakWord(word: string): void {
   speak(word, { rate: Math.min(useProgress.getState().settings.ttsRate, 0.8) });
 }
 
-/** Speak the pure-ish sound of a grapheme (e.g. "sss"), stretched out. */
+/**
+ * Play a grapheme's sound. Prefers a bundled RECORDED clip (smooth, accurate);
+ * falls back to the stretched TTS approximation when no clip is present.
+ */
 export function speakPhoneme(graphemeId: string): void {
+  if (useProgress.getState().settings.muted) return;
   const p = PHONEME_BY_ID[graphemeId];
+
+  const url = getPhonemeAudioUrl(graphemeId);
+  if (url) {
+    window.speechSynthesis?.cancel();
+    const audio = new Audio(url);
+    audio.play().catch(() => {
+      // Autoplay/policy failure → fall back to TTS.
+      if (p) speak(p.say, { rate: 0.7 });
+    });
+    return;
+  }
+
   if (!p) return;
   speak(p.say, { rate: 0.7 });
 }
