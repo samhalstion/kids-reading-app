@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { PHONEME_BY_ID } from "../../content/phonemes";
 import type { SoundTapActivity } from "../../content/types";
-import { speakPhoneme, speakPhonemeWithExample } from "../../lib/speech";
+import { speakPhoneme, speakWord } from "../../lib/speech";
 import { sfx } from "../../lib/audio";
 import { BigButton } from "../ui/BigButton";
 import { ActivityFrame } from "./common";
@@ -37,7 +37,7 @@ export function SoundTap({ activity, onComplete }: ActivityProps<SoundTapActivit
         </motion.button>
 
         <button
-          onClick={() => speakPhonemeWithExample(p.id)}
+          onClick={() => speakWord(p.example)}
           className="flex items-center gap-3 rounded-full bg-white/80 px-6 py-3 text-3xl shadow"
         >
           <span>{p.exampleEmoji}</span>
