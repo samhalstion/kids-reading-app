@@ -13,5 +13,8 @@ export default defineConfig({
   build: {
     outDir: "dist-single",
     emptyOutDir: true,
+    // Inline every asset (incl. woff2 fonts) as data URIs so the single HTML is
+    // fully self-contained — needed for the zero-host shareable demo link.
+    assetsInlineLimit: 100_000_000,
   },
 });
