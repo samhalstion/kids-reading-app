@@ -40,8 +40,10 @@ the phoneme catalog and plug in as data — no engine changes needed.
 Data-driven activity types (`src/components/activities/`), one per skill: letter-sound
 tap, initial-sound picture match, sound blending, word building, tap-to-hear word
 grids, decodable story reading with word highlight, comprehension questions,
-sight-word flash cards, and word↔picture matching. No timers, no "lives" — wrong
-answers gently re-teach.
+sight-word flash cards, and word↔picture matching. Story reading uses a gentle
+**repeated-reading loop** — the child is nudged to re-read the same decodable
+text to build fluency (no timer, no gate; "I'm done" is always available). No
+timers, no "lives" — wrong answers gently re-teach.
 
 ## Rewards
 
