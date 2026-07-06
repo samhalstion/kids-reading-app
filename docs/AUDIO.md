@@ -12,17 +12,29 @@ short **recorded clips**. The plumbing is already in place:
 
 ## Status
 
-9 clips generated (voice **"Gia"**, ByteDance Seed Audio, ~0.1 credits each):
-`s, a, o, t, p, sh` and the four that used to fall back to TTS — `or, oi, aw`
-(`oy` reuses `oi`). Pull them onto a computer with:
-`node scripts/fetch-phoneme-audio.mjs`. The remaining canonical sounds in the
-table below still need generating (the app uses the human-recorded `.mp3` set
-in the meantime — see `ATTRIBUTION.md`).
+**The full canonical set — all 41 non-aliased sounds — is generated** (voice
+**"Gia"**, ByteDance Seed Audio, ~0.1 credits each) and listed with URLs in
+`scripts/fetch-phoneme-audio.mjs`. Run it once on any machine with internet:
 
-> Why not done in the build sandbox: its egress policy blocks the Higgsfield
-> CDN (403), so the generated `.wav` files must be fetched from a normal
-> machine. `scripts/fetch-phoneme-audio.mjs` already lists every clip's URL —
-> run it once anywhere with internet and the clips auto-register at build time.
+```bash
+node scripts/fetch-phoneme-audio.mjs   # writes every <id>.wav, deletes old .mp3s
+npm run build
+```
+
+This replaces the human-recorded **AGPL-3.0** `.mp3` clips (see `ATTRIBUTION.md`)
+with one consistent, permissively-usable voice across the whole catalog — no
+more copyleft obligation. The script only deletes the `.mp3` files after all
+clips download cleanly, so the app never ends up silent.
+
+> Why not committed from the build sandbox: its egress policy blocks the
+> Higgsfield CDN (403), so the generated `.wav` bytes must be fetched from a
+> normal machine. Until then those graphemes keep using the bundled `.mp3`
+> clips (or TTS where none exists) — nothing breaks.
+
+**Spot-check before committing:** the stop consonants (`b d g k p t`) and
+affricates (`ch j`) carry a light schwa from any TTS voice — listen to those
+and the ⚠️ sounds below, and regenerate an entry (swap its filename in the
+script) if one is off.
 
 ## Canonical clips to record
 
