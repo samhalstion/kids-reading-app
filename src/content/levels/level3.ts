@@ -201,6 +201,7 @@ export const level3: Level = {
                 { word: "jam", emoji: "🍯" },
               ],
             },
+            { type: "storyRead", storyId: "story-vet" },
           ],
         },
         {
@@ -250,6 +251,7 @@ export const level3: Level = {
                 },
               ],
             },
+            { type: "storyRead", storyId: "story-frogs-jump" },
           ],
         },
       ],

@@ -83,6 +83,7 @@ export const level7: Level = {
                 { word: "star", emoji: "⭐" },
               ],
             },
+            { type: "storyRead", storyId: "story-corn-fort" },
           ],
         },
         {
@@ -170,6 +171,7 @@ export const level7: Level = {
                 { word: "paw", emoji: "🐾" },
               ],
             },
+            { type: "storyRead", storyId: "story-boy-toys" },
           ],
         },
         {

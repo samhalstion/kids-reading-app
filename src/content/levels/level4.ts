@@ -232,6 +232,7 @@ export const level4: Level = {
                 },
               ],
             },
+            { type: "storyRead", storyId: "story-fish-dish" },
           ],
         },
       ],

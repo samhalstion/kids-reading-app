@@ -22,6 +22,12 @@ const CLIPS = [
   { id: "t", file: "hf_20260705_192355_99c6c1d5-7b65-4751-a16a-ea1eba40417f.wav" },
   { id: "p", file: "hf_20260705_195712_37d38b6b-1d4e-46ac-8937-0b9058078ffd.wav" },
   { id: "sh", file: "hf_20260705_192402_ba5bc251-31b1-49b1-992b-9212b501d3cf.wav" },
+
+  // The four sounds that previously fell back to TTS (voice: "Gia").
+  // `oy` reuses the `oi` clip via the alias map in src/lib/phonemeAudio.ts.
+  { id: "or", file: "hf_20260706_013316_1c73c103-3de0-4176-a1c9-9334582f4777.wav" },
+  { id: "oi", file: "hf_20260706_013316_54a6987c-7e3a-4918-87d2-73452f503c9f.wav" },
+  { id: "aw", file: "hf_20260706_013637_531cd854-6af9-482b-beed-98432fa07474.wav" },
 ];
 
 await mkdir(OUT, { recursive: true });

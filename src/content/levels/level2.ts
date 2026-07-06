@@ -261,6 +261,7 @@ export const level2: Level = {
                 },
               ],
             },
+            { type: "storyRead", storyId: "story-sun-fun" },
           ],
         },
       ],

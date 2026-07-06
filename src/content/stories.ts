@@ -169,6 +169,93 @@ export const STORIES: Story[] = [
       { text: "Out came a baby dino. What a day!", emoji: "🦕" },
     ],
   },
+
+  // -------------------------------------------------------------------------
+  // Bonus fluency stories. Each is extra decodable connected text at a stage
+  // the child has already reached, so they get more re-reading practice with
+  // patterns they know. Wired into a lesson via a second storyRead activity;
+  // validated against that lesson's cumulative phonics set by the test suite.
+  // -------------------------------------------------------------------------
+  {
+    id: "story-pig-dog", // bonus @ L1-U2-04 — s a t p i n m d g o; heart: the a I is
+    title: "A Pig and a Dog",
+    pages: [
+      { text: "A pig sat on a mat.", emoji: "🐷" },
+      { text: "A dog sat on top.", emoji: "🐶" },
+      { text: "I pat the pig. I pat the dog.", emoji: "🤚" },
+      { text: "Nap, pig! Nap, dog!", emoji: "😴" },
+    ],
+  },
+  {
+    id: "story-snack", // bonus @ L1-U2-05 — adds c k ck
+    title: "Pack a Snack",
+    pages: [
+      { text: "I pack a sack.", emoji: "🎒" },
+      { text: "The cat got a snack.", emoji: "🐱" },
+      { text: "Tick tock! Tap, tap!", emoji: "⏰" },
+      { text: "The cat naps on a cot.", emoji: "😴" },
+    ],
+  },
+  {
+    id: "story-sun-fun", // bonus @ L2-U2-10 — all five short vowels (adds e r h b f l u)
+    title: "Fun in the Sun",
+    pages: [
+      { text: "The sun is up. It is hot!", emoji: "☀️" },
+      { text: "A bug ran to a big log.", emoji: "🐛" },
+      { text: "Ben and Deb hop and run.", emoji: "🏃" },
+      { text: "Fun, fun! The sun is fun!", emoji: "😄" },
+    ],
+  },
+  {
+    id: "story-vet", // bonus @ L3-U1-13 — adds j v w x y z
+    title: "Vic the Vet",
+    pages: [
+      { text: "Vic is a vet.", emoji: "🩺" },
+      { text: "A wet dog ran to Vic.", emoji: "🐶" },
+      { text: "Vic can fix the dog.", emoji: "🔧" },
+      { text: "The dog is not sad. Yes!", emoji: "😄" },
+    ],
+  },
+  {
+    id: "story-frogs-jump", // bonus @ L3-U2-15 — blends + qu zz ff ll ss
+    title: "Frogs Jump",
+    pages: [
+      { text: "Ten frogs sit on a log.", emoji: "🐸" },
+      { text: "A duck must quack.", emoji: "🦆" },
+      { text: "The frogs jump in fast.", emoji: "💨" },
+      { text: "Buzz! A bug zips off.", emoji: "🐝" },
+    ],
+  },
+  {
+    id: "story-fish-dish", // bonus @ L4-U2-20 — adds sh ch th wh ng
+    title: "Fish in a Dish",
+    pages: [
+      { text: "A fish is in a dish.", emoji: "🐟" },
+      { text: "The fish can splash.", emoji: "🌊" },
+      { text: "Chomp! The fish had lunch.", emoji: "🍽️" },
+      { text: "What fun! The fish is quick.", emoji: "⚡" },
+    ],
+  },
+  {
+    id: "story-corn-fort", // bonus @ L7-U1-32 — practices bossy /or/
+    title: "The Corn Fort",
+    pages: [
+      { text: "Nort has a fort of corn.", emoji: "🌽" },
+      { text: "The fort is by a tree.", emoji: "🌳" },
+      { text: "A big storm hit the fort!", emoji: "⛈️" },
+      { text: "Nort can fix the fort. Good job!", emoji: "🔧" },
+    ],
+  },
+  {
+    id: "story-boy-toys", // bonus @ L7-U2-34 — practices oi / oy / ou / aw
+    title: "The Boy and the Toys",
+    pages: [
+      { text: "A boy had lots of toys.", emoji: "🧸" },
+      { text: "He found a coin in the soil.", emoji: "🪙" },
+      { text: "The boy saw a paw print.", emoji: "🐾" },
+      { text: "It was a cat! Do not shout.", emoji: "🐱" },
+    ],
+  },
 ];
 
 export const STORY_BY_ID: Record<string, Story> = Object.fromEntries(

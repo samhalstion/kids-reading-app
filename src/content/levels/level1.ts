@@ -201,6 +201,7 @@ export const level1: Level = {
                 },
               ],
             },
+            { type: "storyRead", storyId: "story-pig-dog" },
           ],
         },
         {
@@ -260,6 +261,7 @@ export const level1: Level = {
                 },
               ],
             },
+            { type: "storyRead", storyId: "story-snack" },
           ],
         },
       ],

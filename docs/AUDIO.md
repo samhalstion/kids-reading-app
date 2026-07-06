@@ -12,12 +12,17 @@ short **recorded clips**. The plumbing is already in place:
 
 ## Status
 
-6 starter clips generated (voice **"Gia"**, ByteDance Seed Audio, ~0.1 credits
-each): `s, a, o, t, p, sh`. Pull them onto a computer with:
-`node scripts/fetch-phoneme-audio.mjs`. The rest still need generating.
+9 clips generated (voice **"Gia"**, ByteDance Seed Audio, ~0.1 credits each):
+`s, a, o, t, p, sh` and the four that used to fall back to TTS — `or, oi, aw`
+(`oy` reuses `oi`). Pull them onto a computer with:
+`node scripts/fetch-phoneme-audio.mjs`. The remaining canonical sounds in the
+table below still need generating (the app uses the human-recorded `.mp3` set
+in the meantime — see `ATTRIBUTION.md`).
 
-> Why not done in the build sandbox: its network policy blocks downloading the
-> generated files, so they must be fetched from a normal machine.
+> Why not done in the build sandbox: its egress policy blocks the Higgsfield
+> CDN (403), so the generated `.wav` files must be fetched from a normal
+> machine. `scripts/fetch-phoneme-audio.mjs` already lists every clip's URL —
+> run it once anywhere with internet and the clips auto-register at build time.
 
 ## Canonical clips to record
 
