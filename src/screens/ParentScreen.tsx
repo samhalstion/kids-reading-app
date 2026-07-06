@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { LEVELS } from "../content/levels";
 import { TOTAL_LESSONS } from "../lib/curriculum";
 import { PHONEME_BY_ID } from "../content/phonemes";
-import { useProgress } from "../store/progress";
+import { useProgress, fluencyStats, FLUENCY_GOAL } from "../store/progress";
 import { BigButton } from "../components/ui/BigButton";
 import { GrownUpGate } from "../components/ui/GrownUpGate";
 
@@ -26,6 +26,7 @@ export function ParentScreen() {
   });
 
   const masteredTotal = Object.values(s.lessonScores).filter((sc) => sc.mastered).length;
+  const fluency = fluencyStats(s.storyReads);
 
   // Top skills the child has missed most — the "practice these" list.
   const weakSkills = Object.entries(s.missedGraphemes)
@@ -52,9 +53,14 @@ export function ParentScreen() {
           <strong>{masteredTotal}</strong> of {TOTAL_LESSONS} lessons mastered
           {" "}({s.completedLessons.length} played)
         </p>
-        <p className="mb-4 text-sm text-gray-500">
+        <p className="mb-2 text-sm text-gray-500">
           "Mastered" = answered 80%+ of items correctly on the first try. 🔥 {s.streakDays}-day
           streak · 🐾 {s.unlockedCreatures.length} monsters
+        </p>
+        <p className="mb-4 text-sm text-gray-500">
+          📖 <strong>{fluency.totalReads}</strong> story reads · {fluency.fluentStories} read
+          fluently (re-read {FLUENCY_GOAL}×+). Re-reading the same decodable text builds reading
+          fluency.
         </p>
         <div className="flex flex-col gap-2">
           {perLevel.map((l) => (

@@ -35,6 +35,12 @@ const XP_PER_LESSON = 20;
 /** First-try accuracy at or above this = the lesson is "mastered". */
 export const MASTERY_THRESHOLD = 0.8;
 
+/**
+ * Re-reading the same decodable text this many times counts a story as read
+ * "fluently". Repeated reading is the core fluency mechanic (see StoryRead).
+ */
+export const FLUENCY_GOAL = 2;
+
 function starsFor(accuracy: number): 1 | 2 | 3 {
   if (accuracy >= 0.9) return 3;
   if (accuracy >= MASTERY_THRESHOLD) return 2;
@@ -93,9 +99,13 @@ interface ProgressState {
   lessonScores: Record<string, LessonScore>;
   /** How many times each grapheme has been missed — the weak-skills heat map. */
   missedGraphemes: Record<string, number>;
+  /** Lifetime count of completed read-throughs per story (fluency practice). */
+  storyReads: Record<string, number>;
   settings: Settings;
 
   completeLesson: (lessonId: string, result: LessonResult) => LessonRewards;
+  /** Record one completed read-through of a story; returns its new lifetime count. */
+  recordStoryRead: (storyId: string) => number;
   toggleMute: () => void;
   setRate: (rate: number) => void;
   toggleDyslexicFont: () => void;
@@ -130,6 +140,7 @@ export const useProgress = create<ProgressState>()(
       lastPlayedDate: null,
       lessonScores: {},
       missedGraphemes: {},
+      storyReads: {},
       settings: { muted: false, ttsRate: 0.85, dyslexicFont: false },
 
       completeLesson: (lessonId, result) => {
@@ -246,6 +257,12 @@ export const useProgress = create<ProgressState>()(
         };
       },
 
+      recordStoryRead: (storyId) => {
+        const next = (get().storyReads[storyId] ?? 0) + 1;
+        set((s) => ({ storyReads: { ...s.storyReads, [storyId]: next } }));
+        return next;
+      },
+
       toggleMute: () => set((s) => ({ settings: { ...s.settings, muted: !s.settings.muted } })),
       setRate: (rate) => set((s) => ({ settings: { ...s.settings, ttsRate: rate } })),
       toggleDyslexicFont: () =>
@@ -261,6 +278,7 @@ export const useProgress = create<ProgressState>()(
           lastPlayedDate: null,
           lessonScores: {},
           missedGraphemes: {},
+          storyReads: {},
         }),
     }),
     {
@@ -274,4 +292,23 @@ export const useProgress = create<ProgressState>()(
 /** Convenience selector: how many of all lessons are complete. */
 export function completionRatio(completedLessons: string[]): number {
   return LESSON_REFS.length === 0 ? 0 : completedLessons.length / LESSON_REFS.length;
+}
+
+export interface FluencyStats {
+  /** Total completed read-throughs across all stories. */
+  totalReads: number;
+  /** Distinct stories read at least once. */
+  storiesRead: number;
+  /** Distinct stories re-read to the fluency goal. */
+  fluentStories: number;
+}
+
+/** Reading-fluency summary derived from per-story read counts. */
+export function fluencyStats(storyReads: Record<string, number>): FluencyStats {
+  const counts = Object.values(storyReads);
+  return {
+    totalReads: counts.reduce((a, b) => a + b, 0),
+    storiesRead: counts.filter((c) => c > 0).length,
+    fluentStories: counts.filter((c) => c >= FLUENCY_GOAL).length,
+  };
 }

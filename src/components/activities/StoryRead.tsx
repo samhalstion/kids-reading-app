@@ -4,14 +4,15 @@ import type { SentenceReadActivity, StoryReadActivity } from "../../content/type
 import { STORY_BY_ID } from "../../content/stories";
 import { speak, speakWord } from "../../lib/speech";
 import { sfx } from "../../lib/audio";
+import { useProgress, FLUENCY_GOAL } from "../../store/progress";
 import { BigButton } from "../ui/BigButton";
 import { ActivityFrame } from "./common";
 import { EXPLORATORY, type ActivityProps } from "./types";
 
 // Reading the same decodable text a few times is the most evidence-backed way to
 // build fluency (repeated reading). We nudge toward a second read — gently, with
-// no timer and no gate: the child can always choose "I'm done".
-const FLUENCY_GOAL = 2;
+// no timer and no gate: the child can always choose "I'm done". FLUENCY_GOAL and
+// the persisted per-story tally live in the progress store.
 
 /** A tappable decodable sentence with word-by-word highlight when read aloud. */
 function Sentence({ text }: { text: string }) {
@@ -143,6 +144,8 @@ export function StoryRead({
   function finishRead() {
     const n = reads + 1;
     setReads(n);
+    // Persist the read-through toward the lifetime fluency tally (grown-up dashboard).
+    useProgress.getState().recordStoryRead(story.id);
     if (n >= FLUENCY_GOAL) sfx.unlock();
     else sfx.correct();
     setCheering(true);

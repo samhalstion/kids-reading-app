@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { MASTERY_THRESHOLD, useProgress } from "../src/store/progress";
+import {
+  MASTERY_THRESHOLD,
+  FLUENCY_GOAL,
+  fluencyStats,
+  useProgress,
+} from "../src/store/progress";
 import { LESSON_REFS } from "../src/lib/curriculum";
 
 // ---------------------------------------------------------------------------
@@ -61,5 +66,32 @@ describe("mastery scoring", () => {
       .completeLesson(firstLesson, { items: 0, firstTryCorrect: 0, misses: [] });
     expect(r.accuracy).toBe(1);
     expect(r.mastered).toBe(true);
+  });
+});
+
+describe("reading-fluency tally", () => {
+  it("counts read-throughs per story and reports lifetime counts", () => {
+    const st = useProgress.getState();
+    expect(st.recordStoryRead("story-sam")).toBe(1);
+    expect(st.recordStoryRead("story-sam")).toBe(2);
+    expect(useProgress.getState().storyReads["story-sam"]).toBe(2);
+  });
+
+  it("a story is 'fluent' only once re-read to the goal", () => {
+    const st = useProgress.getState();
+    st.recordStoryRead("story-dog"); // 1 read — not yet fluent
+    st.recordStoryRead("story-sam");
+    st.recordStoryRead("story-sam"); // 2 reads — fluent
+    const f = fluencyStats(useProgress.getState().storyReads);
+    expect(f.totalReads).toBe(3);
+    expect(f.storiesRead).toBe(2);
+    expect(f.fluentStories).toBe(1);
+    expect(FLUENCY_GOAL).toBe(2);
+  });
+
+  it("resetProgress clears the fluency tally", () => {
+    useProgress.getState().recordStoryRead("story-sam");
+    useProgress.getState().resetProgress();
+    expect(useProgress.getState().storyReads).toEqual({});
   });
 });
